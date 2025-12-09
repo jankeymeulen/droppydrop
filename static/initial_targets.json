@@ -1,0 +1,26 @@
+[
+  {
+    "playerName": "Jan",
+    "obfuscatedURL": "http://localhost:8080/player/Hikn",
+    "target": {
+      "lat": 50.94688389490967,
+      "lng": 4.044148564287046
+    }
+  },
+  {
+    "playerName": "JanTest",
+    "obfuscatedURL": "http://localhost:8080/player/HiknBzo6Jw==",
+    "target": {
+      "lat": 50.94788389490967,
+      "lng": 4.044148564287046
+    }
+  },
+  {
+    "playerName": "TestJan",
+    "obfuscatedURL": "http://localhost:8080/player/AC06JxUoPQ==",
+    "target": {
+      "lat": 50.94888389490967,
+      "lng": 4.044148564287046
+    }
+  }
+]

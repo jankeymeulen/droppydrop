@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pre-Game Test Results</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        body { font-family: sans-serif; }
+        .container { max-width: 900px; margin: 20px auto; padding: 20px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { padding: 12px; border: 1px solid #ddd; text-align: left; }
+        th { background-color: #f2f2f2; }
+        tr:nth-child(even) { background-color: #f9f9f9; }
+        tr:hover { background-color: #f1f1f1; }
+        .status-cell span {
+            padding: 3px 6px;
+            border-radius: 4px;
+            color: white;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+        .status-success { background-color: #28a745; }
+        .status-warning { background-color: #ffc107; color: black; }
+        .status-failure { background-color: #dc3545; }
+        #refresh-btn { margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Pre-Game Test Results</h1>
+        <p><a href="/gamelead">&larr; Back to Game Lead Dashboard</a></p>
+        <button id="refresh-btn">Refresh Now</button>
+        <p id="last-updated">Loading...</p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Player Name</th>
+                    <th>Location</th>
+                    <th>Notifications</th>
+                    <th>Server</th>
+                    <th>Last Tested</th>
+                </tr>
+            </thead>
+            <tbody id="results-table-body">
+                <!-- Rows will be inserted here by JavaScript -->
+            </tbody>
+        </table>
+    </div>
+    <script src="/js/testresults.js?v={{.AppVersion}}"></script>
+</body>
+</html>

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DroppyDrop</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        #message-input {
+            width: 100%;
+            box-sizing: border-box; /* Ensures padding doesn't add to width */
+        }
+        #send-message-button {
+            width: 100%;
+            font-size: 1em;
+            margin: 10px 0; /* 10px top/bottom, 0 left/right */
+        }
+        .status-box {
+            font-family: monospace;
+            background-color: #f5f5f5;
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 4px;
+            white-space: pre-wrap; /* Allows text to wrap */
+            word-wrap: break-word; /* Breaks long words */
+        }
+        @keyframes blink-animation {
+            50% { background-color: #f8d7da; } /* A light, desaturated red */
+        }
+        .blinking-dm {
+            /* The animation will run for 1.5s per cycle, infinitely.
+               We will use JavaScript to stop it. */
+            animation: blink-animation 1.5s infinite;
+        }
+    </style>
+</head>
+<body>
+    <h1>DroppyDrop</h1>
+
+    <hr>
+    <h2>Status</h2>
+    <div id="status" class="status-box">Initializing...</div>
+
+    <hr>
+    <h2>Send Message</h2>
+    <textarea id="message-input" rows="3" placeholder="Type your message here..."></textarea>
+    <button id="send-message-button">Send</button>
+    <div id="message-status" class="status-box"></div>
+
+    <hr>
+    <h2>Incoming Message</h2>
+    <div id="dm-status" class="status-box">No messages received yet.</div>
+
+    <hr>
+    <h2>Current Target</h2>
+    <div id="target-status" class="status-box">No target assigned.</div>
+
+    <script src="/js/player.js?v={{.AppVersion}}"></script>
+
+    <hr>
+</body>
+</html>

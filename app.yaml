@@ -1,0 +1,32 @@
+runtime: go123
+
+handlers:
+  # API routes are handled by our Go application.
+  - url: /api/.* # This will catch /api/locations and /api/locations/.*
+    script: _auto
+    secure: always
+
+  # Serve the game lead's map view.
+  - url: /gamelead
+    script: _auto
+
+  # Serve the URL generator tool.
+  - url: /generator
+    script: _auto
+
+  # Serve the test results viewer.
+  - url: /testresults
+    script: _auto
+
+  # Serve the pre-game test page.
+  - url: /test
+    script: _auto
+
+  # Serve the player's view.
+  - url: /player/.*
+    script: _auto
+
+  # Serve other static assets like CSS and JS.
+  - url: /(.*)
+    static_files: static/\1
+    upload: static/(.*)

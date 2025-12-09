@@ -1,0 +1,23 @@
+indexes:
+
+# This index is needed for the player's status check (handlePlayerMessages)
+# to find the last message from a specific player.
+- kind: PlayerMessage
+  properties:
+  - name: PlayerID
+  - name: Timestamp
+    direction: desc
+
+# This index is also for the player's status check (handlePlayerMessages)
+# to find the last DM sent to a specific player.
+- kind: DirectMessage
+  properties:
+  - name: PlayerID
+  - name: Timestamp
+    direction: desc
+
+# This index is for the test results page, to show the latest tests first.
+- kind: TestResult
+  properties:
+  - name: Timestamp
+    direction: desc

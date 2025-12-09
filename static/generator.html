@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Player URL Generator</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        body { font-family: sans-serif; padding: 20px; }
+        .container { max-width: 600px; margin: auto; }
+        textarea {
+            width: 100%;
+            box-sizing: border-box;
+            margin-top: 5px;
+            font-family: monospace;
+        }
+        button { padding: 8px 12px; margin-top: 10px; }
+        #json-output-container {
+            margin-top: 20px;
+            display: none; /* Hidden by default */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Player URL Generator</h1>
+        <p><a href="/gamelead">&larr; Back to Game Lead Dashboard</a></p>
+        <div>
+            <label for="player-names-input">Enter player names (one per line):</label>
+            <textarea id="player-names-input" rows="10" placeholder="PlayerOne&#10;PlayerTwo&#10;PlayerThree"></textarea>
+            <button id="generate-json-btn">Generate JSON Config</button>
+        </div>
+        <div id="json-output-container">
+            <h3>Generated Config</h3>
+            <p>1. Copy this JSON. <br>2. Paste it into the <code>static/initial_targets.json</code> file. <br>3. Manually edit the latitude and longitude for each player.</p>
+            <textarea id="json-output" rows="15" readonly></textarea>
+            <button id="copy-json-btn">Copy JSON</button>
+        </div>
+    </div>
+    <script src="/js/generator.js?v={{.AppVersion}}"></script>
+</body>
+</html>

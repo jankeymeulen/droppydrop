@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Lead Dashboard</title>
+
+    <!-- Leaflet CSS for the map -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    <!-- Marker Cluster CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <style>
+        body { display: flex; flex-direction: column; height: 100vh; margin: 0; }
+        .main-content { display: flex; flex: 1; overflow: hidden; }
+        #map { flex-grow: 1; height: 100%; }
+        .sidebar { display: flex; flex-direction: row; width: 600px; border-left: 1px solid #ccc; }
+        .sidebar-column { display: flex; flex-direction: column; flex-basis: 300px; flex-grow: 1; border-left: 1px solid #ccc; }
+        .sidebar-column:first-child { border-left: none; }
+        #legend, #messages, #player-actions { padding: 10px; overflow-y: auto; }
+        #legend { border-bottom: 1px solid #ccc; flex-shrink: 0; }
+        #messages { flex-grow: 1; }
+        #player-actions { flex-grow: 1; display: flex; flex-direction: column; }
+        .legend-item { display: flex; align-items: center; margin-bottom: 5px; cursor: pointer; padding: 2px; border-radius: 3px; }
+        .legend-item:hover { background-color: #eee; }
+        .legend-item.selected { background-color: #d0e3ff; }
+        .legend-color { width: 18px; height: 18px; border-radius: 50%; margin-right: 8px; border: 1px solid #555; }
+        .message-item, .chat-message { border: 1px solid #ddd; border-radius: 4px; padding: 8px; margin-bottom: 8px; background: #fff; }
+        .message-item.unread { background: #eef; border-color: #aac; }
+        .message-header, .chat-header { font-size: 0.8em; color: #555; margin-bottom: 4px; }
+        .message-header strong { color: #000; }
+        .message-content { margin-bottom: 8px; }
+        .mark-read-btn { font-size: 0.8em; padding: 2px 6px; }
+        #chat-history { flex-grow: 1; overflow-y: auto; padding-top: 5px; background: #f9f9f9; }
+        #dm-form { padding-top: 10px; border-top: 1px solid #ccc; }
+        #dm-form textarea { width: 95%; display: block; margin-bottom: 5px; }
+        #player-actions h3 {
+            margin-top: 0;
+            padding-bottom: 5px;
+        }
+        #center-map-button, #load-targets-btn {
+            margin: 4px;
+            padding: 2px 2px;
+            cursor: pointer;
+        }
+        .header a { margin-left: 15px; }
+        .header { padding: 0 10px; }
+        /* Custom Cluster Styles */
+        .player-cluster, .player-cluster div { background-color: rgba(18, 125, 204, 0.6); }
+        .target-cluster, .target-cluster div { background-color: rgba(241, 128, 23, 0.6); }
+        .mixed-cluster, .mixed-cluster div { background-color: rgba(153, 51, 204, 0.6); }
+
+        .player-cluster div, .target-cluster div, .mixed-cluster div {
+            color: white;
+            font-weight: bold;
+        }
+        /* Style for markers with stale location data */
+        .stale-location .player-marker-svg {
+            opacity: 0.6;
+            filter: grayscale(50%);
+        }
+        .url-generator {
+            padding: 10px;
+            border-top: 1px solid #ccc;
+            background-color: #f5f5f5;
+        }
+        #generated-urls-list { margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Game Lead Dashboard</h1>
+        <button id="center-map-button">Center Map on Players</button>
+        <button id="load-targets-btn">Load Initial Targets from File</button>
+        <a href="/generator" target="_blank">Generate Player URLs</a>
+        <a href="/testresults" target="_blank">View Test Results</a>
+    </div>
+    <div class="main-content">
+        <div id="map"></div>
+        <div class="sidebar">
+            <div class="sidebar-column">
+                <div id="legend">
+                    <h2>Legend</h2>
+                    <div id="legend-items"></div>
+                </div>
+                <div id="messages">
+                    <h2>Messages</h2>
+                    <div id="message-feed"></div>
+                </div>
+            </div>
+            <div class="sidebar-column">
+                <div id="player-actions">
+                    <p>Click a player on the map or in the legend to see actions.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <!-- Marker Cluster JS -->
+    <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+    <script src="/js/gamelead.js?v={{.AppVersion}}"></script>
+</body>
+</html>

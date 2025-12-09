@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DroppyDrop Test</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        body { font-family: sans-serif; padding: 20px; }
+        .container { max-width: 600px; margin: auto; }
+        #results-checklist { margin-top: 20px; list-style-type: none; padding: 0; }
+        #results-checklist li { margin-bottom: 10px; font-size: 1.1em; }
+        .success { color: green; }
+        .failure { color: red; }
+        .warning { color: orange; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>DroppyDrop Test</h1>
+        <p>Enter your name and click the button to test your device's capabilities for the game.</p>
+        <input type="text" id="player-name" placeholder="Enter your name" size="30">
+        <button id="start-test-btn">Start Test</button>
+
+        <ul id="results-checklist" style="display: none;">
+            <li id="server-check">Server Connection: <span>Testing...</span></li>
+            <li id="location-check">Location Access: <span>Testing...</span></li>
+            <li id="notification-check">Notification Permission: <span>Testing...</span></li>
+        </ul>
+    </div>
+    <script src="/js/player.js?v={{.AppVersion}}"></script>
+</body>
+</html>
