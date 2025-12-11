@@ -1,26 +1,146 @@
 [
   {
-    "playerName": "Jan",
-    "obfuscatedURL": "http://localhost:8080/player/Hikn",
+    "playerName": "1: Jan",
+    "obfuscatedURL": "",
     "target": {
-      "lat": 50.94688389490967,
-      "lng": 4.044148564287046
+      "lat": 51.0182016,
+      "lng": 3.9120276
     }
   },
   {
-    "playerName": "JanTest",
-    "obfuscatedURL": "http://localhost:8080/player/HiknBzo6Jw==",
+    "playerName": "6: ",
+    "obfuscatedURL": "",
     "target": {
-      "lat": 50.94788389490967,
-      "lng": 4.044148564287046
+      "lat": 51.0182016,
+      "lng": 3.9120276
     }
   },
   {
-    "playerName": "TestJan",
-    "obfuscatedURL": "http://localhost:8080/player/AC06JxUoPQ==",
+    "playerName": "2: Jan 2",
+    "obfuscatedURL": "",
     "target": {
-      "lat": 50.94888389490967,
-      "lng": 4.044148564287046
+      "lat": 51.024782,
+      "lng": 3.9043484
+    }
+  },
+  {
+    "playerName": "3: Jan 3",
+    "obfuscatedURL": "",
+    "target": {
+      "lat": 51.024782,
+      "lng": 3.9043484
+    }
+  },
+  {
+    "playerName": "4: ",
+    "obfuscatedURL": "",
+    "target": {
+      "lat": 51.0306204,
+      "lng": 3.9133411
+    }
+  },
+  {
+    "playerName": "5: ",
+    "obfuscatedURL": "",
+    "target": {
+      "lat": 51.0306204,
+      "lng": 3.9133411
+    }
+  },
+  {
+    "playerName": "7: ",
+    "obfuscatedURL": "",
+    "target": {
+      "lat": 51.0329732,
+      "lng": 3.9316429
+    }
+  },
+    {
+    "playerName": "8: ",
+    "obfuscatedURL": "",
+    "target": {
+      "lat": 51.0329732,
+      "lng": 3.9316429
+    }
+  },
+  {
+    "playerName": "9: ",
+    "obfuscatedURL": "",
+    "target": {
+      "lat": 51.0367216,
+      "lng": 3.9322847
+    }
+  },
+    {
+    "playerName": "11: ",
+    "obfuscatedURL": "",
+    "target": {
+      "lat": 51.0367216,
+      "lng": 3.9322847
+    }
+  },
+  {
+    "playerName": "10: ",
+    "obfuscatedURL": "",
+    "target": {
+      "lat": 51.034216,
+      "lng": 3.9456271
+    }
+  },
+    {
+    "playerName": "12: ",
+    "obfuscatedURL": "",
+    "target": {
+      "lat": 51.034216,
+      "lng": 3.9456271
+    }
+  },
+  {
+    "playerName": "13: ",
+    "obfuscatedURL": "",
+    "target": {
+      "lat": 51.0365408,
+      "lng": 3.9648769
+    }
+  },
+    {
+    "playerName": "16: ",
+    "obfuscatedURL": "",
+    "target": {
+      "lat": 51.0365408,
+      "lng": 3.9648769
+    }
+  },
+    {
+    "playerName": "17: ",
+    "obfuscatedURL": "",
+    "target": {
+      "lat": 51.0365408,
+      "lng": 3.9648769
+    }
+  },
+  {
+    "playerName": "14: ",
+    "obfuscatedURL": "",
+    "target": {
+      "lat": 51.0333392,
+      "lng": 3.9704926
+    }
+  },
+    {
+    "playerName": "15: ",
+    "obfuscatedURL": "",
+    "target": {
+      "lat": 51.0333392,
+      "lng": 3.9704926
+    }
+  },
+    {
+    "playerName": "18: ",
+    "obfuscatedURL": "",
+    "target": {
+      "lat": 51.0333392,
+      "lng": 3.9704926
     }
   }
 ]

@@ -21,3 +21,10 @@ indexes:
   properties:
   - name: Timestamp
     direction: desc
+
+# This index is for the location history page.
+- kind: LocationHistory
+  properties:
+  - name: PlayerID
+  - name: Timestamp
+    direction: asc

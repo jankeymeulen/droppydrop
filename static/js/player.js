@@ -60,17 +60,15 @@ async function runPlayerPage() {
   function showNotification(title, options) {
     // Only show notifications if permission has been granted.
     if (Notification.permission === "granted") {
-      console.log("Attempting to create notification with title:", title);
-      const notification = new Notification(title, { body: options.body });
-
-      notification.onshow = function() {
-        console.log('Notification shown successfully!');
-      };
-      notification.onerror = function(err) {
-        // This is the key listener for debugging.
-        console.error('Notification API error: ', err);
-      };
-
+      try {
+        // This may fail on mobile browsers, which require a service worker.
+        const notification = new Notification(title, { body: options.body });
+        notification.onshow = () => console.log('Notification shown successfully!');
+        notification.onerror = (err) => console.error('Notification API error: ', err);
+      } catch (e) {
+        // Log the error but don't crash. The user will still see the blinking UI.
+        console.warn(`Could not display notification ('${title}'). This is expected on some mobile platforms. Error: ${e.message}`);
+      }
     } else {
       console.log("Skipping notification, permission is:", Notification.permission);
     }
@@ -167,7 +165,7 @@ async function runPlayerPage() {
     }
 
     if (!target) {
-      targetStatusEl.textContent = "No target assigned.";
+      targetStatusEl.textContent = "No target assigned.\nGame leads will assign one shortly, stand by.";
       return;
     }
 
@@ -316,20 +314,18 @@ function runTestPage() {
     }
 
     async function postTestResults(results) {
-        try {
-            const response = await fetch('/api/test-result', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(results),
-            });
-            if (!response.ok) {
-                throw new Error(`Server responded with status ${response.status}`);
-            }
-            console.log("Successfully posted test results to server.");
-        } catch (error) {
-            // This is a non-critical error, so we just log it and don't bother the user.
-            console.error("Could not post test results to server:", error);
+        // Add a cache-busting query parameter to ensure the request is not cached by mobile browsers.
+        const url = `/api/test-result?cb=${new Date().getTime()}`;
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            cache: 'no-store', // Explicitly bypass the browser cache, including service workers.
+            body: JSON.stringify(results),
+        });
+        if (!response.ok) {
+            throw new Error(`Server responded with status ${response.status}`);
         }
+        console.log("Successfully posted test results to server.");
     }
 
 
@@ -343,40 +339,22 @@ function runTestPage() {
         startTestBtn.disabled = true;
         startTestBtn.textContent = "Testing...";
         resultsList.style.display = 'block';
+        
+        // Reset UI with initial statuses
+        updateChecklistItem(locationCheckEl, 'pending', 'Initializing...');
+        updateChecklistItem(notificationCheckEl, 'pending', 'Waiting...');
+        updateChecklistItem(serverCheckEl, 'pending', 'Waiting...');
 
         const results = {
             playerName: playerName,
-            notificationStatus: 'Testing',
-            locationStatus: 'Testing',
-            serverStatus: 'Testing',
+            notificationStatus: 'Pending',
+            locationStatus: 'Pending',
+            serverStatus: 'Pending',
         };
-        // --- 1. Test Notification Permission ---
-        // This is a simplified version for the test page.
-        async function requestTestNotificationPermission() {
-            if (!("Notification" in window)) {
-                return 'unsupported';
-            }
-            return await Notification.requestPermission();
-        }
 
-        const permission = await requestTestNotificationPermission();
-        if (permission === 'granted') {
-            updateChecklistItem(notificationCheckEl, 'success', 'Granted ✅');
-            results.notificationStatus = 'Granted';
-            new Notification('DroppyDrop Test', { body: 'Notifications are working!' });
-        } else if (permission === 'denied') {
-            updateChecklistItem(notificationCheckEl, 'warning', `Refused ⚠️ - Notifications are useful but not required to play. You can enable them in browser settings if you change your mind.`);
-            results.notificationStatus = 'Refused';
-        } else if (permission === 'unsupported') {
-            updateChecklistItem(notificationCheckEl, 'failure', 'Not supported by this browser ❌');
-            results.notificationStatus = 'Unsupported';
-        } else {
-            updateChecklistItem(notificationCheckEl, 'warning', `Skipped ⚠️ - You can grant notification permission later if you wish.`);
-            results.notificationStatus = 'Skipped';
-        }
-
-        // --- 2. Test Geolocation Permission ---
+        // --- 1. Test Geolocation Permission ---
         try {
+            updateChecklistItem(locationCheckEl, 'pending', 'Requesting permission...');
             await getGeolocation(); // Use the shared helper
             updateChecklistItem(locationCheckEl, 'success', 'Success ✅');
             results.locationStatus = 'Success';
@@ -391,25 +369,40 @@ function runTestPage() {
             }
         }
 
-        // --- 3. Test Notification Permission ---
-        const notificationPermission = await requestTestNotificationPermission();
-        if (notificationPermission === 'granted') {
-            updateChecklistItem(notificationCheckEl, 'success', 'Granted ✅');
-            results.notificationStatus = 'Granted';
-            new Notification('DroppyDrop Test', { body: 'Notifications are working!' });
-        } else if (notificationPermission === 'denied') {
-            updateChecklistItem(notificationCheckEl, 'warning', `Refused ⚠️ - Notifications are useful but not required. You can enable them in settings if you change your mind.`);
-            results.notificationStatus = 'Refused';
-        } else if (notificationPermission === 'unsupported') {
+        // --- 2. Test Notification Permission ---
+        updateChecklistItem(notificationCheckEl, 'pending', 'Requesting permission...');
+        if (!("Notification" in window)) {
             updateChecklistItem(notificationCheckEl, 'warning', 'Not supported by this browser ⚠️');
             results.notificationStatus = 'Unsupported';
-        } else { // 'default'
-            updateChecklistItem(notificationCheckEl, 'warning', `Skipped ⚠️ - You can grant notification permission later if you wish.`);
-            results.notificationStatus = 'Skipped';
+        } else {
+            // Using .then() to handle the promise without async/await in this block
+            await Notification.requestPermission().then(permission => {
+                if (permission === 'granted') {
+                    updateChecklistItem(notificationCheckEl, 'success', 'Granted ✅');
+                    results.notificationStatus = 'Granted';
+                    try {
+                        // This may fail on mobile, but the permission check is the important part.
+                        new Notification('DroppyDrop Test', { body: 'Notifications are working!' });
+                    } catch (e) {
+                        console.warn("Could not show test notification directly. This is expected on mobile. Error:", e.message);
+                    }
+                } else if (permission === 'denied') {
+                    updateChecklistItem(notificationCheckEl, 'warning', `Refused ⚠️ - Notifications are useful but not required. You can enable them in settings if you change your mind.`);
+                    results.notificationStatus = 'Refused';
+                } else { // 'default'
+                    updateChecklistItem(notificationCheckEl, 'warning', `Skipped ⚠️ - You can grant notification permission later if you wish.`);
+                    results.notificationStatus = 'Skipped';
+                }
+            }).catch(error => {
+                // This might happen with very old browsers, but we handle it just in case.
+                updateChecklistItem(notificationCheckEl, 'warning', `Error during permission request: ${error.message}`);
+                results.notificationStatus = 'Error';
+            });
         }
 
-        // --- 4. Submit results and test server connection ---
+        // --- 3. Submit results and test server connection ---
         try {
+            updateChecklistItem(serverCheckEl, 'pending', 'Submitting results to server...');
             await postTestResults(results);
             // If the post succeeds, the server connection is good.
             updateChecklistItem(serverCheckEl, 'success', 'Success ✅');
@@ -420,7 +413,7 @@ function runTestPage() {
             console.error("Server submission error:", error);
         }
 
-        // Re-enable the button after all tests are complete.
+        // --- 4. Finalize ---
         finally {
             startTestBtn.disabled = false;
             startTestBtn.textContent = "Run Test Again";

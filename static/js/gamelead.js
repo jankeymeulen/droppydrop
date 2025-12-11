@@ -154,6 +154,51 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
+  // --- Waypoints Toggle ---
+  const toggleWaypointsBtn = document.getElementById('toggle-waypoints-btn');
+  let waypointsLayer = null;
+  let waypointsVisible = false;
+
+  async function loadAndShowWaypoints() {
+    // If layer already exists, just add it back to the map
+    if (waypointsLayer) {
+      map.addLayer(waypointsLayer);
+      return;
+    }
+
+    // Otherwise, create the layer for the first time
+    waypointsLayer = L.layerGroup();
+    try {
+      const response = await fetch('/suggested_targets.json');
+      if (!response.ok) throw new Error('Could not load suggested_targets.json');
+      const waypoints = await response.json();
+
+      waypoints.forEach(wp => {
+        L.circleMarker([wp.lat, wp.lng], {
+          radius: 6,
+          color: '#333',
+          fillColor: '#777',
+          fillOpacity: 0.7,
+        }).bindTooltip(wp.name, {
+          permanent: true, // Make the tooltip always visible
+          direction: 'top',
+          className: 'waypoint-tooltip'
+        }).addTo(waypointsLayer);
+      });
+
+      map.addLayer(waypointsLayer);
+    } catch (error) {
+      console.error("Failed to load waypoints:", error);
+      alert("Could not load suggested waypoints.");
+    }
+  }
+
+  toggleWaypointsBtn.addEventListener('click', () => {
+    waypointsVisible = !waypointsVisible;
+    if (waypointsVisible) loadAndShowWaypoints();
+    else if (waypointsLayer) map.removeLayer(waypointsLayer);
+  });
+
   // --- Player Selection and Actions ---
 
   function handlePlayerSelection(clickedPlayerID, event) {
@@ -239,6 +284,7 @@ document.addEventListener("DOMContentLoaded", () => {
       playerActionsEl.innerHTML = `
         <h3>Actions for <span style="color: ${playerColor};">${selectedPlayerID}</span></h3>
         <button id="send-location-btn">Send Location</button>
+        <button id="clear-target-btn">Clear Target</button>
         <hr>
         <div id="chat-history">Loading chat...</div>
         <div id="dm-form">
@@ -290,6 +336,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       // Wire up the send location button
       document.getElementById('send-location-btn').addEventListener('click', enterLocationSelectMode);
+      wireUpClearTargetButton();
     } else {
       // --- MULTIPLE PLAYERS SELECTED ---
       const selectedPlayersHtml = Array.from(selectedPlayerIDs).map(id => 
@@ -299,6 +346,7 @@ document.addEventListener("DOMContentLoaded", () => {
       playerActionsEl.innerHTML = `
         <h3>Group Message (${selectedPlayerIDs.size} players)</h3>
         <button id="send-location-btn">Send Location to All</button>
+        <button id="clear-target-btn">Clear Target for All</button>
         <hr>
         <p>Sending to: ${selectedPlayersHtml}</p>
         <div id="dm-form">
@@ -310,6 +358,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       // Wire up the send location button
       document.getElementById('send-location-btn').addEventListener('click', enterLocationSelectMode);
+      wireUpClearTargetButton();
     }
 
     // Wire up the send button
@@ -358,6 +407,43 @@ document.addEventListener("DOMContentLoaded", () => {
         if (selectedPlayerIDs.size === 1) {
           await renderPlayerActions();
         }
+      }
+    });
+  }
+
+  function wireUpClearTargetButton() {
+    document.getElementById('clear-target-btn').addEventListener('click', async () => {
+      const actionText = selectedPlayerIDs.size > 1 ? "targets for all selected players" : `target for ${Array.from(selectedPlayerIDs)[0]}`;
+      if (!confirm(`Are you sure you want to clear the ${actionText}?`)) return;
+
+      const statusEl = document.getElementById('dm-send-status');
+      if (statusEl) statusEl.textContent = 'Clearing targets...';
+
+      try {
+        // We need to get obfuscated IDs for all selected players.
+        const obfusPromises = Array.from(selectedPlayerIDs).map(playerID =>
+          fetch('/api/obfuscate-url', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ playerID: playerID }),
+          }).then(res => res.json())
+        );
+        const obfusDataArray = await Promise.all(obfusPromises);
+
+        const clearPromises = obfusDataArray.map(obfusData =>
+          fetch(`/api/target/${obfusData.obfuscatedID}`, {
+            method: 'DELETE',
+          }).then(res => { if (!res.ok) throw new Error(`Failed for ${obfusData.playerID}`) })
+        );
+        await Promise.all(clearPromises);
+        
+        if (statusEl) statusEl.textContent = 'Targets cleared!';
+        updateMapData(); // Refresh map to remove lines
+      } catch (error) {
+        console.error('Error clearing targets:', error);
+        if (statusEl) statusEl.textContent = 'Error clearing targets.';
+      } finally {
+        setTimeout(() => { if (statusEl) statusEl.textContent = ''; }, 4000);
       }
     });
   }

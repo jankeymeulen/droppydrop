@@ -29,6 +29,16 @@ type PlayerLocation struct {
 	Status          string    `json:"status"`          // e.g., "OK", "UNAVAILABLE", "DENIED"
 }
 
+// LocationHistoryEntry represents a single point in a player's location history.
+type LocationHistoryEntry struct {
+	PlayerID        string    `json:"playerID"`
+	Lat             float64   `json:"lat"`
+	Lng             float64   `json:"lng"`
+	Timestamp       time.Time `json:"timestamp"`
+	ClientTimestamp time.Time `json:"clientTimestamp"`
+	Status          string    `json:"status"`
+}
+
 // PlayerMessage represents a message sent from a player to the game leads.
 type PlayerMessage struct {
 	ID        int64     `json:"id" datastore:"-"` // The datastore key ID
@@ -147,6 +157,7 @@ func main() {
 	http.HandleFunc("/test", serveTemplate("static/test.html"))
 	http.HandleFunc("/generator", serveTemplate("static/generator.html"))
 	http.HandleFunc("/testresults", serveTemplate("static/testresults.html"))
+	http.HandleFunc("/history", serveTemplate("static/history.html"))
 
 	http.HandleFunc("/api/locations/", handleUpdateLocation) // POST /api/locations/{playerID}
 	http.HandleFunc("/api/locations", handleGetLocations)   // GET /api/locations
@@ -162,6 +173,7 @@ func main() {
 	http.HandleFunc("/api/obfuscate-url", handleObfuscateURL)     // POST to get an obfuscated URL
 	http.HandleFunc("/api/test-result", handleTestResult)         // POST for test page results
 	http.HandleFunc("/api/test-results", handleGetTestResults)    // GET for all test results
+	http.HandleFunc("/api/history", handleGetHistory)             // GET location history for a player
 	http.HandleFunc("/api/admin/load-initial-targets", handleLoadInitialTargets) // POST to load targets from file
 	http.HandleFunc("/api/admin/clear-datastore", handleClearDatastore) // Temporary admin endpoint
 
@@ -260,6 +272,21 @@ func handleUpdateLocation(w http.ResponseWriter, r *http.Request) {
 		log.Printf("ERROR: Failed to save location for player %s: %v", playerID, err)
 		http.Error(w, "Internal server error when saving location.", http.StatusInternalServerError)
 		return
+	}
+
+	// Also save to the LocationHistory kind to keep a full record.
+	historyEntry := &LocationHistoryEntry{
+		PlayerID:        playerID,
+		Lat:             loc.Lat,
+		Lng:             loc.Lng,
+		Timestamp:       loc.Timestamp,
+		ClientTimestamp: loc.ClientTimestamp,
+		Status:          loc.Status,
+	}
+	historyKey := datastore.IncompleteKey("LocationHistory", nil)
+	if _, err := dsClient.Put(ctx, historyKey, historyEntry); err != nil {
+		log.Printf("ERROR: Failed to save location history for player %s: %v", playerID, err)
+		// We don't fail the request here, as the main location update succeeded.
 	}
 
 	w.WriteHeader(http.StatusOK)
@@ -600,15 +627,28 @@ func handleChatHistory(w http.ResponseWriter, r *http.Request) {
 
 // handleSetTargetLocation handles a game lead setting a target location for a player.
 func handleSetTargetLocation(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodPost {
-		http.Error(w, "Only POST method is allowed", http.StatusMethodNotAllowed)
-		return
-	}
-
 	obfuscatedID := strings.TrimPrefix(r.URL.Path, "/api/target/")
 	playerID, err := deobfuscatePlayerID(obfuscatedID)
 	if err != nil {
 		http.Error(w, "Player ID is missing", http.StatusBadRequest)
+		return
+	}
+
+	ctx := context.Background()
+	key := datastore.NameKey("TargetLocation", playerID, nil)
+
+	if r.Method == http.MethodDelete {
+		if err := dsClient.Delete(ctx, key); err != nil {
+			log.Printf("ERROR: Failed to delete target for player %s: %v", playerID, err)
+			http.Error(w, "Internal server error when deleting target location.", http.StatusInternalServerError)
+			return
+		}
+		w.WriteHeader(http.StatusOK)
+		return
+	}
+
+	if r.Method != http.MethodPost {
+		http.Error(w, "Only POST or DELETE method is allowed", http.StatusMethodNotAllowed)
 		return
 	}
 
@@ -636,8 +676,6 @@ func handleSetTargetLocation(w http.ResponseWriter, r *http.Request) {
 		IsReleased: true, // Targets set during the game are always released immediately.
 	}
 
-	ctx := context.Background()
-	key := datastore.NameKey("TargetLocation", playerID, nil)
 	if _, err := dsClient.Put(ctx, key, target); err != nil {
 		log.Printf("ERROR: Failed to save target for player %s: %v", playerID, err)
 		http.Error(w, "Internal server error when saving target location.", http.StatusInternalServerError)
@@ -814,6 +852,33 @@ func handleLoadInitialTargets(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(map[string]interface{}{"message": fmt.Sprintf("Successfully loaded and set %d initial targets.", len(targets))})
 }
 
+// handleGetHistory retrieves the location history for a specific player.
+func handleGetHistory(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		http.Error(w, "Only GET method is allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	playerID := r.URL.Query().Get("player")
+	if playerID == "" {
+		http.Error(w, "Player ID is required", http.StatusBadRequest)
+		return
+	}
+
+	ctx := context.Background()
+	query := datastore.NewQuery("LocationHistory").FilterField("PlayerID", "=", playerID).Order("Timestamp")
+
+	var history []LocationHistoryEntry
+	if _, err := dsClient.GetAll(ctx, query, &history); err != nil {
+		log.Printf("ERROR: Failed to fetch history for player %s: %v", playerID, err)
+		http.Error(w, "Internal server error fetching history.", http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(history)
+}
+
 // handleClearDatastore is a temporary admin function to wipe all known kinds from the datastore.
 // WARNING: This deletes all data. Use with caution.
 func handleClearDatastore(w http.ResponseWriter, r *http.Request) {
@@ -825,7 +890,7 @@ func handleClearDatastore(w http.ResponseWriter, r *http.Request) {
 	}
 
 	ctx := context.Background()
-	kinds := []string{"PlayerLocation", "PlayerMessage", "DirectMessage", "TargetLocation", "TestResult"}
+	kinds := []string{"PlayerLocation", "PlayerMessage", "DirectMessage", "TargetLocation", "TestResult", "LocationHistory"}
 	totalDeleted := 0
 
 	for _, kind := range kinds {

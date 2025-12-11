@@ -41,7 +41,7 @@
             margin-top: 0;
             padding-bottom: 5px;
         }
-        #center-map-button, #load-targets-btn {
+        #center-map-button, #load-targets-btn, #toggle-waypoints-btn {
             margin: 4px;
             padding: 2px 2px;
             cursor: pointer;
@@ -67,6 +67,12 @@
             border-top: 1px solid #ccc;
             background-color: #f5f5f5;
         }
+        /* Style for the permanent tooltips on waypoint markers */
+        .waypoint-tooltip {
+            background-color: rgba(255, 255, 255, 0.85);
+            border: 1px solid #555;
+            color: #333;
+        }
         #generated-urls-list { margin-top: 10px; }
     </style>
 </head>
@@ -75,7 +81,9 @@
         <h1>Game Lead Dashboard</h1>
         <button id="center-map-button">Center Map on Players</button>
         <button id="load-targets-btn">Load Initial Targets from File</button>
+        <button id="toggle-waypoints-btn">Toggle Waypoints</button>
         <a href="/generator" target="_blank">Generate Player URLs</a>
+        <a href="/history" target="_blank">View Location History</a>
         <a href="/testresults" target="_blank">View Test Results</a>
     </div>
     <div class="main-content">

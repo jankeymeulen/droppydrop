@@ -14,6 +14,10 @@ handlers:
   - url: /generator
     script: _auto
 
+  # Serve the location history viewer.
+  - url: /history
+    script: _auto
+
   # Serve the test results viewer.
   - url: /testresults
     script: _auto
