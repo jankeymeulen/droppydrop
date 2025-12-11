@@ -1,143 +1,143 @@
 [
   {
-    "playerName": "1: Jan",
-    "obfuscatedURL": "",
+    "playerName": "1: Ben",
+    "obfuscatedURL": "http://localhost:8080/player/ZXJpETon",
     "target": {
       "lat": 51.0182016,
       "lng": 3.9120276
     }
   },
   {
-    "playerName": "6: ",
-    "obfuscatedURL": "",
+    "playerName": "6: Ilse",
+    "obfuscatedURL": "http://localhost:8080/player/YnJpGjM6Ng==",
     "target": {
       "lat": 51.0182016,
       "lng": 3.9120276
     }
   },
   {
-    "playerName": "2: Jan 2",
-    "obfuscatedURL": "",
+    "playerName": "2: Sjoekes",
+    "obfuscatedURL": "http://localhost:8080/player/ZnJpADUmNjQkLA==",
     "target": {
       "lat": 51.024782,
       "lng": 3.9043484
     }
   },
   {
-    "playerName": "3: Jan 3",
-    "obfuscatedURL": "",
+    "playerName": "3: Mark",
+    "obfuscatedURL": "http://localhost:8080/player/Z3JpHj47OA==",
     "target": {
       "lat": 51.024782,
       "lng": 3.9043484
     }
   },
   {
-    "playerName": "4: ",
-    "obfuscatedURL": "",
+    "playerName": "4: Lander",
+    "obfuscatedURL": "http://localhost:8080/player/YHJpHz4nNzoz",
     "target": {
       "lat": 51.0306204,
       "lng": 3.9133411
     }
   },
   {
-    "playerName": "5: ",
-    "obfuscatedURL": "",
+    "playerName": "5: Aaron",
+    "obfuscatedURL": "http://localhost:8080/player/YXJpEj47PDE=",
     "target": {
       "lat": 51.0306204,
       "lng": 3.9133411
     }
   },
   {
-    "playerName": "7: ",
-    "obfuscatedURL": "",
+    "playerName": "7: Henk",
+    "obfuscatedURL": "http://localhost:8080/player/Y3JpGzonOA==",
     "target": {
       "lat": 51.0329732,
       "lng": 3.9316429
     }
   },
     {
-    "playerName": "8: ",
-    "obfuscatedURL": "",
+    "playerName": "8: Karel",
+    "obfuscatedURL": "http://localhost:8080/player/bHJpGD47NjM=",
     "target": {
       "lat": 51.0329732,
       "lng": 3.9316429
     }
   },
   {
-    "playerName": "9: ",
-    "obfuscatedURL": "",
+    "playerName": "9: Kim",
+    "obfuscatedURL": "http://localhost:8080/player/bXJpGDYk",
     "target": {
       "lat": 51.0367216,
       "lng": 3.9322847
     }
   },
     {
-    "playerName": "11: ",
-    "obfuscatedURL": "",
+    "playerName": "11: Linda",
+    "obfuscatedURL": "http://localhost:8080/player/ZXlzcxMgPTsg",
     "target": {
       "lat": 51.0367216,
       "lng": 3.9322847
     }
   },
   {
-    "playerName": "10: ",
-    "obfuscatedURL": "",
+    "playerName": "10: Ken",
+    "obfuscatedURL": "http://localhost:8080/player/ZXhzcxQsPQ==",
     "target": {
       "lat": 51.034216,
       "lng": 3.9456271
     }
   },
     {
-    "playerName": "12: ",
-    "obfuscatedURL": "",
+    "playerName": "12: Barbara",
+    "obfuscatedURL": "http://localhost:8080/player/ZXpzcx0oIT0gLTI=",
     "target": {
       "lat": 51.034216,
       "lng": 3.9456271
     }
   },
   {
-    "playerName": "13: ",
-    "obfuscatedURL": "",
+    "playerName": "13: Joris",
+    "obfuscatedURL": "http://localhost:8080/player/ZXtzcxUmITYy",
     "target": {
       "lat": 51.0365408,
       "lng": 3.9648769
     }
   },
     {
-    "playerName": "16: ",
-    "obfuscatedURL": "",
+    "playerName": "16: Domien",
+    "obfuscatedURL": "http://localhost:8080/player/ZX5zcxsmPjYkMQ==",
     "target": {
       "lat": 51.0365408,
       "lng": 3.9648769
     }
   },
     {
-    "playerName": "17: ",
-    "obfuscatedURL": "",
+    "playerName": "17: Nico",
+    "obfuscatedURL": "http://localhost:8080/player/ZX9zcxEgMDA=",
     "target": {
       "lat": 51.0365408,
       "lng": 3.9648769
     }
   },
   {
-    "playerName": "14: ",
-    "obfuscatedURL": "",
+    "playerName": "14: Jo",
+    "obfuscatedURL": "http://localhost:8080/player/ZXxzcxUm",
     "target": {
       "lat": 51.0333392,
       "lng": 3.9704926
     }
   },
     {
-    "playerName": "15: ",
-    "obfuscatedURL": "",
+    "playerName": "15: Renzo",
+    "obfuscatedURL": "http://localhost:8080/player/ZX1zcw0sPSUu",
     "target": {
       "lat": 51.0333392,
       "lng": 3.9704926
     }
   },
     {
-    "playerName": "18: ",
-    "obfuscatedURL": "",
+    "playerName": "18: Sven",
+    "obfuscatedURL": "http://localhost:8080/player/ZXBzcww_NjE=",
     "target": {
       "lat": 51.0333392,
       "lng": 3.9704926

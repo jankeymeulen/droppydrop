@@ -1,31 +1,31 @@
 [
     {
-        "name": "Drop off 1",
+        "name": "Drop off 1 Ben",
         "lat": 51.0093352,
         "lng": 3.882361
     },
     {
-        "name": "Drop off 2",
+        "name": "Drop off 2 Sjoekes",
         "lat": 51.0126598,
         "lng": 3.8825578
     },
     {
-        "name": "Drop off 3",
+        "name": "Drop off 3 Mark",
         "lat": 51.0251182,
         "lng": 3.888341
     },
     {
-        "name": "Drop off 4",
+        "name": "Drop off 4 Lander",
         "lat": 51.0269792,
         "lng": 3.8938038
     },
     {
-        "name": "Drop off 5",
+        "name": "Drop off 5 Aaron",
         "lat": 51.0410316,
         "lng": 3.9034486
     },
     {
-        "name": "Drop off 6",
+        "name": "Drop off 6 Ilse",
         "lat": 51.0328712,
         "lng": 3.9112347
     },
@@ -50,12 +50,12 @@
         "lng": 3.9235209
     },
     {
-        "name": "Drop off 7",
+        "name": "Drop off 7 Henk",
         "lat": 51.0364748,
         "lng": 3.9190988
     },
     {
-        "name": "Drop off 8",
+        "name": "Drop off 8 Karel",
         "lat": 51.0442328,
         "lng": 3.9289478
     },
@@ -65,12 +65,12 @@
         "lng": 3.9316429
     },
     {
-        "name": "Drop off 9",
+        "name": "Drop off 9 Kim",
         "lat": 51.0452794,
         "lng": 3.9373421
     },
     {
-        "name": "Drop off 11",
+        "name": "Drop off 11 Linda",
         "lat": 51.041837,
         "lng": 3.9469459
     },
@@ -85,12 +85,12 @@
         "lng": 3.9282112
     },
     {
-        "name": "Drop off 10",
+        "name": "Drop off 10 Ken",
         "lat": 51.0437421,
         "lng": 3.944162
     },
     {
-        "name": "Drop off 12",
+        "name": "Drop off 12 Barbara",
         "lat": 51.0428045,
         "lng": 3.95161
     },
@@ -105,17 +105,17 @@
         "lng": 3.9326486
     },
     {
-        "name": "Drop off 13",
+        "name": "Drop off 13 Joris",
         "lat": 51.0466595,
         "lng": 3.9643871
     },
     {
-        "name": "Drop off 16",
+        "name": "Drop off 16 Domien",
         "lat": 51.0374787,
         "lng": 3.9819022
     },
     {
-        "name": "Drop off 17",
+        "name": "Drop off 17 Nico",
         "lat": 51.043017,
         "lng": 3.9523088
     },
@@ -125,17 +125,17 @@
         "lng": 3.9648769
     },
     {
-        "name": "Drop off 14",
+        "name": "Drop off 14 Jo",
         "lat": 51.0492752,
         "lng": 3.9717431
     },
     {
-        "name": "Drop off 15",
+        "name": "Drop off 15 Renzo",
         "lat": 51.040367,
         "lng": 3.9852517
     },
     {
-        "name": "Drop off 18",
+        "name": "Drop off 18 Sven",
         "lat": 51.0442482,
         "lng": 3.9604466
     },
@@ -153,11 +153,6 @@
         "name": "Bevoorrading",
         "lat": 51.0093532,
         "lng": 3.971835
-    },
-    {
-        "name": "A - 1",
-        "lat": 50.996277222638874,
-        "lng": 3.93766110439111
     },
     {
         "name": "B - 1",
