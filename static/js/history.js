@@ -1,9 +1,17 @@
 document.addEventListener("DOMContentLoaded", () => {
     const map = L.map('map').setView([50.8503, 4.3517], 9);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    
+    const standardLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
         attribution: '© OpenStreetMap'
     }).addTo(map);
+
+    // A grayscale map layer (CartoDB Positron) for better contrast when viewing paths
+    const contrastLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+        subdomains: 'abcd',
+        maxZoom: 19
+    });
 
     const legendItemsEl = document.getElementById('legend-items');
     const playerHistoryLayers = {}; // Stores Polyline layers by playerID
@@ -22,6 +30,20 @@ document.addEventListener("DOMContentLoaded", () => {
             playerColorMap.set(playerID, color);
         }
         return playerColorMap.get(playerID);
+    }
+
+    function updateMapTheme() {
+        if (selectedPlayerIDs.size > 0) {
+            if (!map.hasLayer(contrastLayer)) {
+                map.addLayer(contrastLayer);
+                map.removeLayer(standardLayer);
+            }
+        } else {
+            if (!map.hasLayer(standardLayer)) {
+                map.addLayer(standardLayer);
+                map.removeLayer(contrastLayer);
+            }
+        }
     }
 
     // --- Fetch Players and Build Legend ---
@@ -68,10 +90,13 @@ document.addEventListener("DOMContentLoaded", () => {
                 map.removeLayer(playerHistoryLayers[playerID]);
                 delete playerHistoryLayers[playerID];
             }
+            updateMapTheme();
         } else {
             // Select
             selectedPlayerIDs.add(playerID);
             legendItem.classList.add('selected');
+            updateMapTheme();
+
             const loader = legendItem.querySelector('.loading-indicator');
             if (loader) loader.style.display = 'inline';
 

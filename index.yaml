@@ -16,15 +16,8 @@ indexes:
   - name: Timestamp
     direction: desc
 
-# This index is for the test results page, to show the latest tests first.
-- kind: TestResult
-  properties:
-  - name: Timestamp
-    direction: desc
-
 # This index is for the location history page.
 - kind: LocationHistory
   properties:
   - name: PlayerID
   - name: Timestamp
-    direction: asc
