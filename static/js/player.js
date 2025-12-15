@@ -58,6 +58,8 @@ async function runPlayerPage() {
   }
 
   function showNotification(title, options) {
+    if (!("Notification" in window)) return;
+
     // Only show notifications if permission has been granted.
     if (Notification.permission === "granted") {
       try {
@@ -179,6 +181,7 @@ async function runPlayerPage() {
 
   // Function to check the status of the last sent message
   async function checkMessageStatus() {
+    let data;
     try {
       const response = await fetch(`/api/messages/${playerID}`);
       if (response.status === 404) {
@@ -188,9 +191,15 @@ async function runPlayerPage() {
       if (!response.ok) {
         throw new Error(`Server error: ${response.status}`);
       }
-      const data = await response.json();
-      
-      // Handle player's sent message status
+      data = await response.json();
+    } catch (error) {
+      console.error("Error fetching message status:", error);
+      messageStatusEl.textContent = "Could not retrieve message status.";
+      return;
+    }
+
+    // Handle player's sent message status
+    try {
       if (data.playerMessage) {
         let statusText = `<strong>Last Message Sent:</strong> "${data.playerMessage.content}"<br>`;
         if (data.playerMessage.isRead) {
@@ -202,8 +211,12 @@ async function runPlayerPage() {
       } else {
         messageStatusEl.innerHTML = "You haven't sent any messages yet.";
       }
+    } catch (e) {
+      console.error("Error updating player message UI:", e);
+    }
 
-      // Handle direct messages from game lead
+    // Handle direct messages from game lead
+    try {
       if (data.dm) {
         const dmTimestamp = new Date(data.dm.timestamp);
         dmStatusEl.innerHTML = `<strong>${dmTimestamp.toLocaleTimeString([], { hour12: false })}:</strong> ${data.dm.content}`;
@@ -223,7 +236,12 @@ async function runPlayerPage() {
           }
         }
       }
-      // Handle target location
+    } catch (e) {
+      console.error("Error handling DM update:", e);
+    }
+
+    // Handle target location
+    try {
       updateTargetDisplay(data.target);
       if (data.target) {
         const targetTimestamp = new Date(data.target.timestamp);
@@ -243,10 +261,8 @@ async function runPlayerPage() {
           }
         }
       }
-
-    } catch (error) {
-      console.error("Error checking message status:", error);
-      messageStatusEl.textContent = "Could not retrieve message status.";
+    } catch (e) {
+      console.error("Error handling target update:", e);
     }
   }
 
